@@ -4,6 +4,7 @@ templateLoader = require './template_loader'
 styleLoader = require './style_loader'
 async = require 'async'
 debug = require('debug-fork') 'ace:boot:app'
+_ = require 'lodash-fork'
 
 getInode = async.memoize (filePath, cb) ->
   fs.stat filePath, (err, stat) ->
@@ -65,6 +66,7 @@ listApp = (ret, arr, root, pending, done, className) ->
           (content, next) -> templateLoader.compile fullPath, type, content, next
           (parsed, next) ->
             ret['template'][type] = parsed
+            ret['files']['template'][type] = fullPath
             next()
         ], done
 
@@ -79,6 +81,7 @@ listApp = (ret, arr, root, pending, done, className) ->
           (content, next) -> styleLoader.compile fullPath, type, content, next
           (parsed, next) ->
             ret['style'][type] = parsed
+            ret['files']['style'][type] = fullPath
             next()
         ], done
 
@@ -91,32 +94,39 @@ listApp = (ret, arr, root, pending, done, className) ->
       debug "loaded #{base}\t\t #{type}"
       ret[base][type] = fullPath
 
-module.exports = do ->
-  cache = {}
+module.exports = (root, options, cb) ->
+  if typeof options is 'function'
+    options = {}
 
-  (root, cb) ->
-    root = path.resolve root
+  root = path.resolve root
 
-    getInode root, (err, inode) ->
-      return cb(err) if err?
-      return cb(null, c) if c = cache[inode]
-
-      ret =
-        model: {}
-        view: {}
-        controller: {}
+  run = ->
+    ret =
+      model: {}
+      view: {}
+      controller: {}
+      template: {}
+      style: {}
+      routes: "#{root}/routes"
+      mediator: "#{root}/mediator"
+      files:
         template: {}
         style: {}
-        routes: "#{root}/routes"
 
-      count = 0
-      done = (err) ->
-        return cb(err) if err?
-        unless --count
-          cb null, cache[inode] = ret
-      pending = -> ++count
+    count = 0
+    done = (err) ->
+      return cb(err) if err?
+      unless --count
+        cb null, ret
+    pending = -> ++count
 
-      pending()
-      listApp ret, [], root, pending, done
-      done()
+    pending()
+    listApp ret, [], root, pending, done
+    done()
 
+  run()
+
+  if options.watch
+    watch root, _.debounce 0, _.debounceAsync run
+
+  return

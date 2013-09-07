@@ -3,7 +3,8 @@ path = require 'path'
 templateLoader = require './template_loader'
 styleLoader = require './style_loader'
 async = require 'async'
-debug = require('debug-fork') 'ace:boot:app'
+require 'debug-fork'
+debug = global.debug 'ace:boot:app'
 _ = require 'lodash-fork'
 
 getInode = async.memoize (filePath, cb) ->
@@ -39,7 +40,7 @@ listApp = (ret, arr, root, pending, done, className) ->
         when 'styles','templates', '+'
           listApp ret, arr, fullPath, pending, done
         else
-          if file in ['-']
+          if file in ['_']
             listApp ret, arr, fullPath, pending, done, className
           else
             arr.push file
@@ -94,24 +95,22 @@ listApp = (ret, arr, root, pending, done, className) ->
       debug "loaded #{base}\t\t #{type}"
       ret[base][type] = fullPath
 
-module.exports = (root, options, cb) ->
-  if typeof options is 'function'
-    options = {}
-
+module.exports = (root, cb) ->
   root = path.resolve root
 
-  run = ->
-    ret =
-      model: {}
-      view: {}
-      controller: {}
+  ret = reload: (done) -> run done
+
+  run = (cb) ->
+    ret[type] = {} for type in ['model','view','controller','template','style']
+    ret.routes = "#{root}/routes"
+    ret.mediator = "#{root}/mediator"
+    ret.files =
       template: {}
       style: {}
-      routes: "#{root}/routes"
-      mediator: "#{root}/mediator"
-      files:
-        template: {}
-        style: {}
+
+    try
+      ret.index = require.resolve "#{root}"
+    catch _error
 
     count = 0
     done = (err) ->
@@ -124,9 +123,6 @@ module.exports = (root, options, cb) ->
     listApp ret, [], root, pending, done
     done()
 
-  run()
+    return
 
-  if options.watch
-    watch root, _.debounce 0, _.debounceAsync run
-
-  return
+  run cb

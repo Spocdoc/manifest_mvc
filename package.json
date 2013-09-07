@@ -1,22 +1,22 @@
 {
-    "name": "manifest_mvc",
-    "version": "0.0.0",
-    "description": "ERROR: No README.md file found!",
-    "main": "index.coffee",
-    "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
-    },
-    "repository": "",
-    "author": "",
-    "private": true,
-    "dependencies": {
-        "stylus": "0.x",
-        "jade": "0.x",
-        "nib": "0.x"
-    },
-    "DEBUG local dependencies": {
-        "debug-fork": "0.x",
-        "lodash-fork": "0.x",
-        "file_memoize": "0.x"
-    }
+  "name": "manifest_mvc",
+  "version": "0.0.0",
+  "description": "ERROR: No README.md file found!",
+  "main": "index.coffee",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": "",
+  "author": "",
+  "private": true,
+  "dependencies": {
+    "stylus": "0.x",
+    "jade": "0.x",
+    "nib": "0.x",
+    "async": "~0.2.9"
+  },
+  "DEBUG local dependencies": {
+    "debug-fork": "0.x",
+    "lodash-fork": "0.x"
+  }
 }

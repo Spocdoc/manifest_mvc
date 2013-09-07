@@ -1,8 +1,8 @@
 path = require 'path'
 async = require 'async'
-typeToClass = require './type_to_class'
+typeToClass = require '../type_to_class'
 nib = require 'nib'
-fileMemoize = require 'file_memoize'
+_ = require 'lodash-fork'
 
 # note: in principle this could be modularized so each style type is in a
 # separate file that's `require`'d as needed
@@ -37,7 +37,7 @@ styleLoaders =
 module.exports =
   handles: (ext) -> styleLoaders[ext]?
 
-  compile: fileMemoize (fullPath, type, content, cb) ->
+  compile: _.fileMemoize (fullPath, type, content, cb) ->
     ext = path.extname(fullPath)[1..]
     styleLoaders[ext](fullPath, type, content, cb)
 

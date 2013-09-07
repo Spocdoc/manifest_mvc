@@ -1,5 +1,5 @@
 path = require 'path'
-fileMemoize = require 'file_memoize'
+_ = require 'lodash-fork'
 
 templateLoaders =
   'html': (str, cb) -> cb null, str
@@ -11,7 +11,7 @@ module.exports =
   handles: (ext) ->
     templateLoaders[ext]?
 
-  compile: fileMemoize (fullPath, type, content, cb) ->
+  compile: _.fileMemoize (fullPath, type, content, cb) ->
     ext = path.extname(fullPath)[1..]
     templateLoaders[ext](content, cb)
 

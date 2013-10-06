@@ -11,10 +11,10 @@ styleLoaders =
   'styl': do ->
     wrapInClass = (styl, type) ->
       if type
-        lines = []
-        lines.push ".#{type}"
-        lines.push "  #{line}" for line in styl.split '\n'
-        lines.join '\n'
+        str = ''
+        str = str + ".#{type}\n"
+        str = str + "  #{line}\n" for line in styl.split '\n'
+        str
       else
         styl
 

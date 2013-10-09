@@ -6,6 +6,7 @@ async = require 'async'
 require 'debug-fork'
 debug = global.debug 'ace:boot:app'
 _ = require 'lodash-fork'
+glob = require 'glob'
 
 getInode = async.memoize (filePath, cb) ->
   fs.stat filePath, (err, stat) ->
@@ -51,7 +52,7 @@ listApp = (ret, arr, root, pending, done, className) ->
 
     extname = path.extname(file)
     base = path.basename(file, extname)
-    ext = extname[1..]
+    ext = extname.substr(1)
     type = arr.join('/')
 
     continue unless base[0] isnt '.'
@@ -63,8 +64,7 @@ listApp = (ret, arr, root, pending, done, className) ->
       pending()
       do (fullPath, type) ->
         async.waterfall [
-          (next) -> fs.readFile fullPath, 'utf-8', next
-          (content, next) -> templateLoader.compile fullPath, type, content, next
+          (next) -> templateLoader.compile fullPath, type, next
           (parsed, next) ->
             ret['template'][type] = parsed
             ret['files']['template'][type] = fullPath
@@ -78,8 +78,7 @@ listApp = (ret, arr, root, pending, done, className) ->
       pending()
       do (fullPath, type) ->
         async.waterfall [
-          (next) -> fs.readFile fullPath, 'utf-8', next
-          (content, next) -> styleLoader.compile fullPath, type, content, next
+          (next) -> styleLoader.compile fullPath, type, next
           (parsed, next) ->
             ret['style'][type] = parsed
             ret['files']['style'][type] = fullPath
@@ -94,6 +93,24 @@ listApp = (ret, arr, root, pending, done, className) ->
     else if base in ['model','view','controller']
       debug "loaded #{base}\t\t #{type}"
       ret[base][type] = fullPath
+
+setLayout = (ret, root, pending, done) ->
+  pending()
+
+  async.waterfall [
+    (next) ->
+      glob "#{root}/layout.*", next
+
+    (filePaths, next) ->
+      return done() unless filePaths.length and filePath = filePaths.filter((filePath) -> templateLoader.handles path.extname(filePath).substr(1))[0]
+      templateLoader.compile filePath, '', next
+
+    (html, next) ->
+      ret['layout'] = html
+      next()
+
+  ], done
+
 
 module.exports = (root, cb) ->
   root = path.resolve root
@@ -118,6 +135,8 @@ module.exports = (root, cb) ->
       unless --count
         cb null, ret
     pending = -> ++count
+
+    setLayout ret, root, pending, done
 
     pending()
     listApp ret, [], root, pending, done

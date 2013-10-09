@@ -13,7 +13,8 @@
     "stylus": "0.x",
     "jade": "0.x",
     "nib": "0.x",
-    "async": "~0.2.9"
+    "async": "0.x",
+    "glob": "3.x"
   },
   "DEBUG local dependencies": {
     "debug-fork": "0.x",

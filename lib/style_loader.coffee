@@ -1,4 +1,5 @@
 path = require 'path'
+fs = require 'fs'
 async = require 'async'
 typeToClass = require '../type_to_class'
 nib = require 'nib'
@@ -69,7 +70,9 @@ styleLoaders =
 module.exports =
   handles: (ext) -> styleLoaders[ext]?
 
-  compile: _.fileMemoize (fullPath, type, content, cb) ->
-    ext = path.extname(fullPath)[1..]
-    styleLoaders[ext](fullPath, type, content, cb)
+  compile: _.fileMemoize (fullPath, type, cb) ->
+    fs.readFile fullPath, encoding: 'utf-8', (err, content) ->
+      return cb err if err?
+      ext = path.extname(fullPath).substr(1)
+      styleLoaders[ext](fullPath, type, content, cb)
 

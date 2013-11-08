@@ -58,6 +58,9 @@ listApp = (ret, arr, root, pending, done, className) ->
     continue unless base[0] isnt '.'
 
     if templateLoader.handles ext
+      # don't include the layout
+      continue if fullPath is "#{root}/layout.#{ext}"
+
       type = formType type, base, 'template'
       debug "loaded template\t\t #{type}"
 

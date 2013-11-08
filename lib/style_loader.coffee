@@ -9,7 +9,7 @@ _ = require 'lodash-fork'
 # separate file that's `require`'d as needed
 
 regexImport = /^\s*@import/
-regexExtend = /^(\s*@extend)(\s*[^\s\$].*)$/
+regexExtend = /^(\s*@extends?)(\s*[^\s\$].*)$/
 regexBlank = /^\s*$/
 regexDollar = /^(\s*)\$/
 

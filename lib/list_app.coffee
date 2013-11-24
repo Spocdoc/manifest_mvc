@@ -8,6 +8,9 @@ debug = global.debug 'ace:boot:app'
 _ = require 'lodash-fork'
 glob = require 'glob'
 
+regexTemplate = /^template\.[a-z]+$/i
+regexStyle = /^style\.[a-z]+$/i
+
 getInode = async.memoize (filePath, cb) ->
   fs.stat filePath, (err, stat) ->
     return cb(err) if err?
@@ -26,7 +29,13 @@ formStyleType = (type, base, stub) ->
   type
 
 listApp = (ret, arr, root, pending, done, className) ->
-  for file in fs.readdirSync root
+  files = fs.readdirSync root
+
+  hasTemplate = files.some (file) -> regexTemplate.test file
+  hasStyle = files.some (file) -> regexStyle.test file
+
+  for file in files
+
     fullPath = "#{root}/#{file}"
     stat = fs.statSync(fullPath)
 
@@ -57,7 +66,7 @@ listApp = (ret, arr, root, pending, done, className) ->
 
     continue unless base[0] isnt '.'
 
-    if templateLoader.handles ext
+    if templateLoader.handles(ext) and (!hasTemplate or regexTemplate.test file)
       # don't include the layout
       continue if fullPath is "#{root}/layout.#{ext}"
 
@@ -74,7 +83,7 @@ listApp = (ret, arr, root, pending, done, className) ->
             next()
         ], done
 
-    else if styleLoader.handles ext
+    else if styleLoader.handles(ext) and (!hasStyle or regexStyle.test file)
       type = formStyleType type, base, 'style'
       debug "loaded style\t\t #{type}"
 

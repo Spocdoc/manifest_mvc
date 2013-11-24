@@ -9,6 +9,7 @@ _ = require 'lodash-fork'
 # separate file that's `require`'d as needed
 
 regexImport = /^\s*@import/
+regexVariable = /^\s*\w+\s*=/
 regexExtend = /^(\s*@extends?)(\s*[^\s\$].*)$/
 regexBlank = /^\s*$/
 regexDollar = /^(\s*)\$/
@@ -32,7 +33,7 @@ styleLoaders =
     (fullPath, type, content, cb) ->
       type = typeToClass type
 
-      imports = ''
+      header = ''
       dollars = ''
       lines = content.split '\n'
       content = ''
@@ -48,7 +49,9 @@ styleLoaders =
             inDollar = false
 
         if regexImport.test line
-          imports += line + '\n'
+          header += line + '\n'
+        else if regexVariable.test line
+          header = line + '\n' + header
         else if m = regexDollar.exec line
           inDollar = true
           dollarSpace = m[1].length
@@ -56,7 +59,7 @@ styleLoaders =
           dollars += line.substr(dollarSpace) + '\n'
         else
           content += line + '\n'
-      content = imports + dollars + wrapInClass(content, type)
+      content = header + dollars + wrapInClass(content, type)
 
       async.parallel
         debug: (done) ->

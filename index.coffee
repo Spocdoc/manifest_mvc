@@ -1,1 +1,1 @@
-module.exports = require './lib/list_app'
+module.exports = require './lib/manifest'

@@ -4,4 +4,11 @@
 
     this is to avoid duplicate definitions across files when using `@extend`
 
+# error avoidance
+
+ - manifest updating should create a temp file then move, rather than directly overwriting the exiting manifest (in case the program is killed in medias)
+
+    this is implemented but not working -- very often if there's a compilation error, the manifest is blank...
+
+
 

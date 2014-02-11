@@ -14,9 +14,8 @@
     "glob": "3.x",
     "js-beautify": "1.x",
     "callsite": "1.x",
-    "temp": "0.x"
-  },
-  "DEBUG local dependencies": {
+    "temp": "0.x",
+
     "debug-fork": "0.x",
     "lodash-fork": "0.x"
   }

@@ -57,14 +57,14 @@ module.exports = listApp = (manifest, root, nameArr, className) ->
 
     continue unless base[0] isnt '.'
 
-    if manifest.isTemplate(file) and (!hasTemplate or regexTemplate.test file)
+    if manifest.isTemplate(file) and ((!hasTemplate and className) or regexTemplate.test file)
       # don't include the layout
       continue if _.sameFileSync(fullPath, "#{manifest.private.root}/#{manifest.layout}")
 
       type = formType type, base, 'template'
       manifest.templates[type] = relPath
 
-    else if manifest.isStyle(file) and (!hasStyle or regexStyle.test file)
+    else if manifest.isStyle(file) and ((!hasStyle and className) or regexStyle.test file)
       type = formStyleType type, base, 'style'
       manifest.styles[type] = relPath
 

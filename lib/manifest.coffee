@@ -89,5 +89,5 @@ module.exports = class Manifest
             done()
 
 
-  clientHtml: -> @private.bundler.clientHtml this
+  clientHtml: (options) -> @private.bundler.clientHtml this, options
 

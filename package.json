@@ -1,6 +1,6 @@
 {
   "name": "manifest_mvc",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "ERROR: No README.md file found!",
   "main": "index.coffee",
   "scripts": {
@@ -15,8 +15,8 @@
     "js-beautify": "1.x",
     "callsite": "1.x",
     "temp": "0.x",
-
     "debug-fork": "0.x",
-    "lodash-fork": "0.x"
+    "lodash-fork": "0.x",
+    "minimist": "0.x"
   }
 }

@@ -8,6 +8,7 @@ listApp = require './list_app'
 beautify = require 'js-beautify'
 callsite = require 'callsite'
 temp = require 'temp'
+minimist = require 'minimist'
 
 temp.track()
 
@@ -19,7 +20,9 @@ class PrivateData
   toJSON: ->
 
 module.exports = class Manifest
-  constructor: (filePath) ->
+  constructor: (filePath, args) ->
+    args = if args then minimist(args) else {}
+
     # resolve relative to caller's file unless absolute
     unless filePath.charAt(0) in ['/','\\']
       stack = callsite()
@@ -29,7 +32,8 @@ module.exports = class Manifest
 
     inst = JSON.parse fs.readFileSync(filePath, encoding:'utf8')
     inst.__proto__ = Manifest.prototype # hard coded "Manifest" to allow without operator new
-    inst.options ||= {}
+
+    inst.options = _.defaults args, inst.options
 
     p = inst.private = new PrivateData
     p.filePath = filePath

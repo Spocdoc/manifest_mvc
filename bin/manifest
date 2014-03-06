@@ -1,0 +1,19 @@
+#!/usr/bin/env coffee
+#--nodejs --debug-brk
+
+fs = require 'fs'
+path = require 'path'
+manifestMVC = require 'manifest_mvc'
+async = require 'async'
+beautify = require 'js-beautify'
+
+mvcPath = path.resolve(process.argv[2]) or path.resolve __dirname, '../../app_placeholder/mvc'
+
+debugger
+
+manifest = manifestMVC mvcPath, process.argv.slice(2)
+
+manifest.update (err) ->
+  return console.error err if err?
+  process.stdout.write beautify(JSON.stringify(manifest),wrap_line_length:70)
+

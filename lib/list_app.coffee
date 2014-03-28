@@ -1,7 +1,6 @@
 fs = require 'fs'
 path = require 'path'
 _ = require 'lodash-fork'
-typeToClass = require '../type_to_class'
 
 regexTemplate = /^template\.[a-z]+$/i
 regexStyle = /^style\.[a-z]+$/i

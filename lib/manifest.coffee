@@ -44,7 +44,7 @@ module.exports = class Manifest
     p.frameworkPath = inst.options.framework || DEFAULT_FRAMEWORK
     p.framework = require p.frameworkPath
     p.assetRoot = path.resolve p.root, (inst.options.assetRoot || DEFAULT_ASSET_ROOT)
-    p.uploadsRoot = path.resolve p.root (inst.options.uploadsRoot || DEFAULT_UPLOADS_ROOT)
+    p.uploadsRoot = path.resolve p.root, (inst.options.uploadsRoot || DEFAULT_UPLOADS_ROOT)
 
     return inst
 

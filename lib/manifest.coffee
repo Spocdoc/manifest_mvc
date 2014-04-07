@@ -15,6 +15,7 @@ temp.track()
 DEFAULT_BUNDLER = 'bundle-fork'
 DEFAULT_FRAMEWORK = 'ace_mvc'
 DEFAULT_ASSET_ROOT = '../public'
+DEFAULT_UPLOADS_ROOT = '../public/uploads'
 
 class PrivateData
   toJSON: ->
@@ -43,6 +44,7 @@ module.exports = class Manifest
     p.frameworkPath = inst.options.framework || DEFAULT_FRAMEWORK
     p.framework = require p.frameworkPath
     p.assetRoot = path.resolve p.root, (inst.options.assetRoot || DEFAULT_ASSET_ROOT)
+    p.uploadsRoot = path.resolve p.root (inst.options.uploadsRoot || DEFAULT_UPLOADS_ROOT)
 
     return inst
 

@@ -35,6 +35,8 @@ module.exports = listApp = (manifest, root, nameArr, className) ->
           listApp manifest, fullPath, nameArr, 'model'
         when 'views'
           listApp manifest, fullPath, nameArr, 'view'
+        # when 'mixins'
+        #   listApp manifest, fullPath, nameArr, 'mixin'
         when 'controllers'
           listApp manifest, fullPath, nameArr, 'controller'
         when 'styles','templates', '+'
@@ -71,7 +73,7 @@ module.exports = listApp = (manifest, root, nameArr, className) ->
       type = formType type, base, 'index'
       manifest["#{className}s"][type] = relPath
 
-    else if base in ['model','view','controller']
+    else if base in ['model','view','controller','mixin']
       manifest["#{base}s"][type] = relPath
 
   return

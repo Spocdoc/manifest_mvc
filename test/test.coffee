@@ -7,7 +7,7 @@ manifestMVC = require 'manifest_mvc'
 async = require 'async'
 beautify = require 'js-beautify'
 
-mvcPath = path.resolve __dirname, '../../app_placeholder/mvc'
+mvcPath = path.resolve __dirname, '../../app_promo/mvc'
 
 debugger
 

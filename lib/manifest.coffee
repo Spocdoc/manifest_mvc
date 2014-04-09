@@ -71,6 +71,7 @@ module.exports = class Manifest
     @styles = {}
     @models = {}
     @views = {}
+    @mixins = {}
     @controllers = {}
 
     listApp this, root, [], ''
